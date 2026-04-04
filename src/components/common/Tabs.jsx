@@ -5,23 +5,25 @@ const Tabs = ({ tabs }) => {
 
   return (
     <div className="w-full">
-      <div className="flex overflow-x-auto border-b border-border scrollbar-hide">
+      <div className="flex overflow-x-auto rounded-[24px] border border-border bg-surface p-1.5 scrollbar-hide">
         {tabs.map((tab, index) => (
           <button
             key={index}
-            className={`whitespace-nowrap px-6 py-4 font-bold text-sm transition-colors relative ${
-              activeTab === index ? 'text-primary' : 'text-muted hover:text-dark'
+            className={`relative whitespace-nowrap rounded-[18px] px-5 py-3 text-sm font-bold transition-colors ${
+              activeTab === index
+                ? 'bg-white text-dark shadow-sm'
+                : 'text-muted hover:text-dark'
             }`}
             onClick={() => setActiveTab(index)}
           >
             {tab.label}
             {activeTab === index && (
-              <div className="absolute bottom-0 left-0 w-full h-[3px] bg-primary rounded-t-full"></div>
+              <div className="absolute inset-x-6 bottom-1 h-[3px] rounded-full bg-primary"></div>
             )}
           </button>
         ))}
       </div>
-      <div className="py-6">
+      <div className="py-8">
         {tabs[activeTab].content}
       </div>
     </div>

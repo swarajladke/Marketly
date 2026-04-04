@@ -1,11 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { FiChevronRight, FiCheckCircle, FiStar, FiShoppingCart, FiEye, FiExternalLink } from 'react-icons/fi';
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import {
+  FiCheckCircle,
+  FiChevronRight,
+  FiDownload,
+  FiEye,
+  FiExternalLink,
+  FiLayers,
+  FiShield,
+  FiShoppingCart,
+  FiStar,
+  FiZap,
+} from 'react-icons/fi';
 import { products, reviews } from '../data/mockData';
 import Tabs from '../components/common/Tabs';
 import ReviewCard from '../components/products/ReviewCard';
 import Badge from '../components/common/Badge';
 import { useCart } from '../context/CartContext';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -14,380 +26,625 @@ const ProductDetailPage = () => {
   const [license, setLicense] = useState('regular');
   const [showStickyBar, setShowStickyBar] = useState(false);
 
-  // Safely get a product or fallback to the first one
-  const product = products.find(p => p.id === parseInt(id)) || products[0];
-  
+  const product = products.find((item) => item.id === Number.parseInt(id, 10)) || products[0];
+  useDocumentTitle(product.title);
+  const regularPrice = product.price;
+  const extendedPrice = product.price * 5;
+  const selectedPrice = license === 'regular' ? regularPrice : extendedPrice;
+  const formattedUpdateDate = new Date(product.lastUpdated).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
   const images = [
     product.previewImage,
-    `https://picsum.photos/seed/prod${product.id}a/600/400`,
-    `https://picsum.photos/seed/prod${product.id}b/600/400`,
-    `https://picsum.photos/seed/prod${product.id}c/600/400`
+    `https://picsum.photos/seed/prod${product.id}a/1200/900`,
+    `https://picsum.photos/seed/prod${product.id}b/1200/900`,
+    `https://picsum.photos/seed/prod${product.id}c/1200/900`,
   ];
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show sticky bar after scrolling past 600px
-      setShowStickyBar(window.scrollY > 600);
+      setShowStickyBar(window.scrollY > 620);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const featureCards = [
+    {
+      icon: <FiLayers size={18} />,
+      title: 'Launch-ready structure',
+      body: 'Every screen is laid out for quick adaptation, with polished spacing, hierarchy, and reusable building blocks.',
+    },
+    {
+      icon: <FiZap size={18} />,
+      title: 'Fast visual payoff',
+      body: 'Use the included sections, components, and styles to ship a page that looks premium much faster.',
+    },
+    {
+      icon: <FiShield size={18} />,
+      title: 'Commercial-safe licensing',
+      body: 'Clear usage rules, dependable updates, and a support policy designed for client and internal work.',
+    },
+    {
+      icon: <FiDownload size={18} />,
+      title: 'Asset bundle included',
+      body: `Package includes ${product.fileSize} of files with source assets, setup notes, and curated compatibility guidance.`,
+    },
+  ];
+
+  const supportCards = [
+    {
+      title: 'Install in minutes',
+      body: 'Extract the package, install dependencies, and use the included notes to get the main screens live quickly.',
+    },
+    {
+      title: 'Built for customization',
+      body: 'Typography, colors, and layout systems are structured so you can adapt the look without fighting the design.',
+    },
+    {
+      title: 'Support window',
+      body: 'You get guidance for setup issues, broken assets, and update questions during the active support period.',
+    },
+  ];
+
+  const changelogItems = [
+    {
+      version: '2.1.0',
+      date: formattedUpdateDate,
+      highlight: 'Latest update',
+      notes: [
+        'Refined showcase screens and visual hierarchy',
+        'Improved tablet and mobile layout spacing',
+        'Updated asset bundle and compatibility notes',
+      ],
+    },
+    {
+      version: '2.0.0',
+      date: 'Feb 12, 2026',
+      notes: [
+        'Introduced the new premium storefront visual language',
+        'Added richer product modules and polished section spacing',
+        'Tuned interaction states across key UI surfaces',
+      ],
+    },
+    {
+      version: '1.0.0',
+      date: 'Jan 5, 2026',
+      notes: ['Initial marketplace release'],
+    },
+  ];
+
+  const starBreakdown = [5, 4, 3, 2, 1].map((star) => {
+    const percentages = { 5: 72, 4: 18, 3: 6, 2: 3, 1: 1 };
+    return {
+      star,
+      percentage: percentages[star],
+      count: Math.max(1, Math.round((product.reviewCount * percentages[star]) / 100)),
+    };
+  });
+
   const tabData = [
     {
       label: 'Overview',
       content: (
-        <div className="prose prose-sm md:prose-base max-w-none text-dark">
-          <h3 className="font-heading font-bold text-xl mb-4">Premium Features Included</h3>
-          <p className="mb-4 text-muted leading-relaxed">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </p>
-          <ul className="list-disc pl-5 mb-6 text-muted space-y-2">
-            <li>Fully responsive design for all devices</li>
-            <li>Customizable Tailwind CSS components</li>
-            <li>Light and dark mode support</li>
-            <li>Detailed documentation and easy setup</li>
-            <li>Free lifetime updates</li>
-          </ul>
-          <img src={images[1]} alt="Preview" className="w-full rounded-card mb-6" />
-          <h3 className="font-heading font-bold text-xl mb-4">Why choose this product?</h3>
-          <p className="text-muted leading-relaxed">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
+        <div className="space-y-8">
+          <div className="grid gap-4 md:grid-cols-2">
+            {featureCards.map((item) => (
+              <div key={item.title} className="rounded-[24px] border border-border bg-white p-5 shadow-sm">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                  {item.icon}
+                </div>
+                <h3 className="mt-4 font-heading text-2xl font-bold text-dark">{item.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted">{item.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+            <div className="rounded-[28px] border border-border bg-surface/80 p-6">
+              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-primary">
+                Why this works
+              </p>
+              <h3 className="mt-3 font-heading text-3xl font-bold leading-tight text-dark">
+                A premium visual system designed to look finished from the first screen.
+              </h3>
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
+                {product.title} is built for teams that want a polished launch surface without spending days rebuilding basic structure. The package is tuned for clarity, speed, and a stronger first impression.
+              </p>
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                {product.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-border bg-white px-3 py-1.5 text-xs font-medium text-dark"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-8 grid gap-4 sm:grid-cols-3">
+                {[
+                  { label: 'File size', value: product.fileSize },
+                  { label: 'Compatible with', value: product.compatibility.join(' / ') },
+                  { label: 'Last update', value: formattedUpdateDate },
+                ].map((item) => (
+                  <div key={item.label} className="rounded-2xl border border-border bg-white p-4">
+                    <p className="text-[10px] font-black uppercase tracking-[0.22em] text-muted">
+                      {item.label}
+                    </p>
+                    <p className="mt-2 text-sm font-bold text-dark">{item.value}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-[28px] border border-border bg-white shadow-sm">
+              <div className="relative aspect-[4/3]">
+                <img
+                  src={images[1]}
+                  alt={`${product.title} alternate preview`}
+                  className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.08),rgba(15,23,42,0.68))]"></div>
+                <div className="absolute inset-x-0 bottom-0 p-6 text-white">
+                  <p className="text-[11px] font-black uppercase tracking-[0.24em] text-white/65">
+                    Included experience
+                  </p>
+                  <h4 className="mt-3 font-heading text-3xl font-bold leading-tight">
+                    Strong previews, cleaner sections, sharper visual rhythm.
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      )
+      ),
     },
     {
       label: 'Reviews',
       content: (
-        <div>
-          {/* Star Breakdown */}
-          <div className="flex flex-col md:flex-row gap-8 mb-8 p-6 bg-surface rounded-card border border-border">
-            <div className="flex flex-col items-center justify-center text-center pb-6 md:pb-0 md:pr-8 md:border-r border-border">
-              <span className="font-heading font-bold text-5xl text-dark mb-2">{product.rating}</span>
-              <div className="flex text-yellow-400 mb-2">
-                {[...Array(5)].map((_, i) => (
-                  <FiStar key={i} className="fill-current" size={18} />
+        <div className="space-y-6">
+          <div className="grid gap-6 xl:grid-cols-[0.55fr_1fr]">
+            <div className="rounded-[28px] border border-border bg-white p-6 shadow-sm">
+              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-primary">
+                Review summary
+              </p>
+              <div className="mt-4 flex items-end gap-4">
+                <span className="font-heading text-6xl font-bold text-dark">{product.rating}</span>
+                <div>
+                  <div className="flex items-center gap-1 text-yellow-400">
+                    {[...Array(5)].map((_, index) => (
+                      <FiStar key={index} className="fill-current" size={16} />
+                    ))}
+                  </div>
+                  <p className="mt-2 text-sm text-muted">{product.reviewCount} reviews from buyers</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-[28px] border border-border bg-white p-6 shadow-sm">
+              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-primary">
+                Rating spread
+              </p>
+              <div className="mt-5 space-y-3">
+                {starBreakdown.map((item) => (
+                  <div key={item.star} className="flex items-center gap-3">
+                    <span className="w-4 text-sm font-bold text-dark">{item.star}</span>
+                    <FiStar className="text-yellow-400" size={12} />
+                    <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-border">
+                      <div
+                        className="h-full rounded-full bg-primary"
+                        style={{ width: `${item.percentage}%` }}
+                      ></div>
+                    </div>
+                    <span className="w-10 text-right text-xs font-medium text-muted">{item.count}</span>
+                  </div>
                 ))}
               </div>
-              <span className="text-sm text-muted font-medium">Based on {product.reviewCount} reviews</span>
-            </div>
-            
-            <div className="flex-1 flex flex-col gap-2 justify-center">
-              {[5, 4, 3, 2, 1].map((star) => (
-                <div key={star} className="flex items-center gap-3">
-                  <span className="text-sm font-bold w-4">{star}</span>
-                  <FiStar className="text-muted" size={12} />
-                  <div className="flex-1 h-2.5 bg-border rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-yellow-400 rounded-full" 
-                      style={{ width: `${star === 5 ? 70 : star === 4 ? 20 : star === 3 ? 5 : 2}%` }}
-                    ></div>
-                  </div>
-                  <span className="text-xs text-muted w-8 text-right font-medium">
-                    {star === 5 ? Math.floor(product.reviewCount * 0.7) : 
-                     star === 4 ? Math.floor(product.reviewCount * 0.2) : 
-                     star === 3 ? Math.floor(product.reviewCount * 0.05) : 1}
-                  </span>
-                </div>
-              ))}
             </div>
           </div>
 
-          <div className="flex flex-col border border-border rounded-card overflow-hidden">
-            {reviews.map(review => (
+          <div className="grid gap-4 lg:grid-cols-2">
+            {reviews.map((review) => (
               <ReviewCard key={review.id} review={review} />
             ))}
           </div>
         </div>
-      )
+      ),
     },
     {
       label: 'Changelog',
       content: (
-        <div className="flex flex-col gap-8 pb-4 pl-2">
-          <div className="border-l-2 border-primary pl-6 relative">
-            <div className="absolute w-3.5 h-3.5 bg-primary rounded-full -left-[9px] top-1.5 ring-4 ring-white"></div>
-            <h4 className="font-bold text-dark mb-1">Version 2.1.0</h4>
-            <span className="text-xs text-primary bg-primary-light px-2 py-0.5 rounded-full font-bold mb-4 inline-block">Latest Update</span>
-            <span className="text-xs text-muted font-mono mb-3 block">March 28, 2026</span>
-            <ul className="list-disc pl-5 text-sm text-muted space-y-2">
-              <li>Added new dashboard layouts</li>
-              <li>Fixed responsive issues on mobile Safari</li>
-              <li>Updated dependency packages</li>
-            </ul>
-          </div>
-          <div className="border-l-2 border-border pl-6 relative">
-            <div className="absolute w-3.5 h-3.5 bg-border rounded-full -left-[9px] top-1.5 ring-4 ring-white"></div>
-            <h4 className="font-bold text-dark mb-1">Version 2.0.0</h4>
-            <span className="text-xs text-muted font-mono mb-3 block">February 12, 2026</span>
-            <ul className="list-disc pl-5 text-sm text-muted space-y-2">
-              <li>Complete UI overhaul with Tailwind CSS</li>
-              <li>Added dark mode support</li>
-              <li>Performance improvements</li>
-            </ul>
-          </div>
-          <div className="border-l-2 border-border pl-6 relative">
-            <div className="absolute w-3.5 h-3.5 bg-border rounded-full -left-[9px] top-1.5 ring-4 ring-white"></div>
-            <h4 className="font-bold text-dark mb-1">Version 1.0.0</h4>
-            <span className="text-xs text-muted font-mono mb-3 block">January 05, 2026</span>
-            <ul className="list-disc pl-5 text-sm text-muted space-y-2">
-              <li>Initial Release</li>
-            </ul>
-          </div>
+        <div className="space-y-5">
+          {changelogItems.map((item, index) => (
+            <div
+              key={item.version}
+              className={`rounded-[28px] border p-6 ${
+                index === 0 ? 'border-primary/30 bg-primary/5' : 'border-border bg-white'
+              }`}
+            >
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-heading text-2xl font-bold text-dark">Version {item.version}</h3>
+                    {item.highlight && (
+                      <span className="rounded-full bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-[0.22em] text-white">
+                        {item.highlight}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-2 text-sm text-muted">{item.date}</p>
+                </div>
+              </div>
+
+              <div className="mt-5 grid gap-3">
+                {item.notes.map((note) => (
+                  <div key={note} className="flex items-start gap-3 rounded-2xl border border-border bg-white px-4 py-3">
+                    <span className="mt-1 h-2.5 w-2.5 rounded-full bg-primary"></span>
+                    <span className="text-sm leading-relaxed text-dark">{note}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
-      )
+      ),
     },
     {
       label: 'Support',
       content: (
-        <div className="space-y-4">
-          <div className="border border-border rounded-card p-5 bg-surface/30">
-            <h4 className="font-bold text-dark mb-2 text-lg">How do I install the template?</h4>
-            <p className="text-sm text-muted leading-relaxed">You can install it by running npm install after extracting the zip file. Detailed instructions are available in the documentation folder provided upon download.</p>
+        <div className="space-y-6">
+          <div className="grid gap-4 lg:grid-cols-3">
+            {supportCards.map((item) => (
+              <div key={item.title} className="rounded-[24px] border border-border bg-white p-5 shadow-sm">
+                <h3 className="font-heading text-2xl font-bold text-dark">{item.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted">{item.body}</p>
+              </div>
+            ))}
           </div>
-          <div className="border border-border rounded-card p-5 bg-surface/30">
-            <h4 className="font-bold text-dark mb-2 text-lg">Can I use this for multiple projects?</h4>
-            <p className="text-sm text-muted leading-relaxed">With the Regular License, you can use it for one project. For multiple projects or SaaS applications where users are charged, please purchase the Extended License.</p>
-          </div>
-          <div className="border border-border rounded-card p-5 bg-surface/30">
-            <h4 className="font-bold text-dark mb-2 text-lg">Do you offer refunds?</h4>
-            <p className="text-sm text-muted leading-relaxed">Yes, we offer a 14-day money-back guarantee if the product doesn't work as described and our support team cannot fix the issue within 48 hours.</p>
+
+          <div className="rounded-[28px] border border-border bg-surface/70 p-6">
+            <p className="text-[11px] font-black uppercase tracking-[0.24em] text-primary">
+              Coverage
+            </p>
+            <h3 className="mt-3 font-heading text-3xl font-bold text-dark">
+              Support is designed to keep launches moving.
+            </h3>
+            <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted">
+              If the package does not behave as described, setup notes are unclear, or a purchased file is broken, support covers troubleshooting and replacement guidance within the active support window.
+            </p>
           </div>
         </div>
-      )
-    }
+      ),
+    },
   ];
 
   return (
-    <div className="bg-white min-h-screen pb-20 relative">
-      <div className="container mx-auto px-4 py-8">
-        
-        {/* Breadcrumb */}
-        <div className="flex items-center text-sm text-muted mb-6 flex-wrap gap-y-2">
-          <Link to="/" className="hover:text-primary transition-colors">Home</Link>
-          <FiChevronRight className="mx-2 flex-shrink-0" size={14} />
-          <Link to="/browse?category=Templates" className="hover:text-primary transition-colors">Templates</Link>
-          <FiChevronRight className="mx-2 flex-shrink-0" size={14} />
-          <span className="text-dark font-medium truncate">{product.title}</span>
-        </div>
-
-        {/* Product Title (Mobile only) */}
-        <div className="lg:hidden mb-6">
-          <h1 className="font-heading font-bold text-2xl text-dark mb-3">{product.title}</h1>
-          <div className="flex items-center gap-4 text-sm">
-            <div className="flex items-center gap-1">
-              <FiStar className="text-yellow-400 fill-yellow-400" size={14} />
-              <span className="font-bold text-dark">{product.rating}</span>
-            </div>
-            <div className="text-muted">{product.sales.toLocaleString()} Sales</div>
+    <div className="min-h-screen bg-silver-light pb-24">
+      <section className="border-b border-silver-dark/20 bg-white">
+        <div className="container mx-auto px-4 py-8 lg:py-10">
+          <div className="flex flex-wrap items-center gap-y-2 text-sm text-muted">
+            <Link to="/" className="transition-colors hover:text-primary">Home</Link>
+            <FiChevronRight className="mx-2 flex-shrink-0" size={14} />
+            <Link to={`/browse?category=${product.category}`} className="transition-colors hover:text-primary">
+              {product.category}
+            </Link>
+            <FiChevronRight className="mx-2 flex-shrink-0" size={14} />
+            <span className="truncate font-medium text-dark">{product.title}</span>
           </div>
-        </div>
 
-        <div className="flex flex-col lg:flex-row gap-10">
-          {/* Left Column (65%) */}
-          <div className="lg:w-[65%]">
-            
-            {/* Title (Desktop) */}
-            <div className="hidden lg:block mb-6">
-              <h1 className="font-heading font-bold text-3xl xl:text-4xl text-dark mb-4 leading-tight">{product.title}</h1>
-              <div className="flex items-center gap-6 text-sm text-muted">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-[10px]">M</div>
-                  Handcrafted by <span className="text-dark font-bold hover:text-primary transition-colors">Marketly</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <FiStar className="text-yellow-400 fill-yellow-400" size={14} />
-                  <span className="font-bold text-dark">{product.rating}</span>
-                  <span>({product.reviewCount} Reviews)</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <FiShoppingCart size={14} />
-                  <span>{product.sales.toLocaleString()} Sales</span>
-                </div>
+          <div className="mt-8 grid gap-10 xl:grid-cols-[1.08fr_0.92fr]">
+            <div>
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="rounded-full bg-primary/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.22em] text-primary">
+                  {product.category}
+                </span>
+                {product.badge && <Badge variant={product.badge.toLowerCase()}>{product.badge}</Badge>}
               </div>
-            </div>
 
-            {/* Image Gallery */}
-            <div className="mb-10">
-              <div className="relative aspect-video rounded-card overflow-hidden bg-surface mb-4 border border-border group">
-                <img 
-                  src={images[activeImage]} 
-                  alt={product.title} 
-                  className="w-full h-full object-cover transition-opacity duration-300"
-                />
-                <button className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm hover:bg-primary hover:text-white text-dark font-medium px-4 py-2 rounded-btn shadow-card flex items-center gap-2 transition-all transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100">
-                  <FiEye /> Live Preview
-                </button>
-                {product.badge && (
-                  <div className="absolute top-4 left-4">
-                    <Badge variant={product.badge.toLowerCase()}>{product.badge}</Badge>
+              <h1 className="mt-5 max-w-4xl font-heading text-4xl font-bold leading-[0.95] text-dark sm:text-5xl xl:text-6xl">
+                {product.title}
+              </h1>
+              <p className="mt-5 max-w-3xl text-lg leading-relaxed text-muted">
+                {product.description}
+              </p>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                {[
+                  `${product.rating} rating`,
+                  `${product.reviewCount} reviews`,
+                  `${product.sales.toLocaleString()} sales`,
+                  `${product.fileSize} package`,
+                ].map((item) => (
+                  <div key={item} className="rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-dark">
+                    {item}
                   </div>
-                )}
-              </div>
-              
-              {/* Thumbnail Strip */}
-              <div className="grid grid-cols-4 gap-4">
-                {images.map((img, index) => (
-                  <button 
-                    key={index}
-                    onClick={() => setActiveImage(index)}
-                    className={`aspect-video rounded-btn overflow-hidden border-2 transition-all ${activeImage === index ? 'border-primary shadow-sm' : 'border-transparent opacity-70 hover:opacity-100'}`}
-                  >
-                    <img src={img} alt={`Thumbnail ${index}`} className="w-full h-full object-cover" />
-                  </button>
                 ))}
               </div>
             </div>
 
-            {/* Tabs Component */}
-            <Tabs tabs={tabData} />
-
+            <div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-1">
+              {[
+                {
+                  label: 'Built for',
+                  value: product.compatibility.join(' / '),
+                },
+                {
+                  label: 'Creator',
+                  value: product.createdBy,
+                },
+                {
+                  label: 'Updated',
+                  value: formattedUpdateDate,
+                },
+              ].map((item) => (
+                <div key={item.label} className="rounded-[26px] border border-silver-dark/20 bg-liquid-chrome p-5 shadow-sm">
+                  <p className="text-[10px] font-black uppercase tracking-[0.22em] text-muted">{item.label}</p>
+                  <p className="mt-3 font-heading text-2xl font-bold leading-tight text-dark">{item.value}</p>
+                </div>
+              ))}
+            </div>
           </div>
+        </div>
+      </section>
 
-          {/* Right Column (35%) */}
-          <div className="lg:w-[35%]">
-            <div className="sticky top-24">
-              
-              {/* Purchase Card */}
-              <div className="bg-white rounded-card shadow-card border border-border p-6 mb-6">
-                
-                {/* Price */}
-                <div className="flex items-baseline gap-2 mb-6">
-                  <span className="font-heading font-bold text-4xl text-primary">${product.price}</span>
-                  <span className="text-muted text-sm line-through">${Math.floor(product.price * 1.5)}</span>
+      <section className="container mx-auto px-4 py-10">
+        <div className="grid gap-10 xl:grid-cols-[1.12fr_0.88fr]">
+          <div>
+            <div className="overflow-hidden rounded-[34px] border border-silver-dark/20 bg-white shadow-[0_28px_90px_-46px_rgba(15,23,42,0.28)]">
+              <div className="relative aspect-[16/10] overflow-hidden bg-slate-950">
+                <img
+                  src={images[activeImage]}
+                  alt={product.title}
+                  className="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.02]"
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.02),rgba(15,23,42,0.62))]"></div>
+                <div className="absolute left-6 top-6 flex flex-wrap gap-2">
+                  <span className="rounded-full border border-white/15 bg-white/90 px-4 py-2 text-[10px] font-black uppercase tracking-[0.22em] text-dark">
+                    Premium preview
+                  </span>
+                  {product.badge && <Badge variant={product.badge.toLowerCase()}>{product.badge}</Badge>}
                 </div>
-
-                {/* License Selector */}
-                <div className="flex bg-surface rounded-btn p-1 mb-6 border border-border">
-                  <button 
-                    onClick={() => setLicense('regular')}
-                    className={`flex-1 py-2 px-3 rounded text-sm font-medium transition-colors ${license === 'regular' ? 'bg-white shadow-sm text-dark border-border border' : 'text-muted border border-transparent hover:text-dark'}`}
-                  >
-                    Regular <span className="block text-xs font-normal opacity-70">Single Use</span>
-                  </button>
-                  <button 
-                    onClick={() => setLicense('extended')}
-                    className={`flex-1 py-2 px-3 rounded text-sm font-medium transition-colors ${license === 'extended' ? 'bg-white shadow-sm text-dark border-border border' : 'text-muted border border-transparent hover:text-dark'}`}
-                  >
-                    Extended <span className="block text-xs font-normal opacity-70">Multi Use</span>
-                  </button>
-                </div>
-
-                <div className="flex items-start gap-2 mb-6">
-                  <FiCheckCircle className="text-primary mt-0.5 flex-shrink-0" size={16} />
-                  <p className="text-xs text-muted leading-relaxed">
-                    {license === 'regular' 
-                      ? 'Use, by you or one client, in a single end product which end users are not charged for.' 
-                      : 'Use, by you or one client, in a single end product which end users can be charged for.'}
-                  </p>
-                </div>
-
-                {/* Buttons */}
-                <div className="flex flex-col gap-3">
-                  <button 
-                    onClick={() => { addToCart(product); setIsCartOpen(true); }}
-                    className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3.5 rounded-btn flex items-center justify-center gap-2 transition-colors shadow-sm text-lg"
-                  >
-                    <FiShoppingCart /> Buy Now
-                  </button>
-                  <button 
-                    onClick={() => addToCart(product)}
-                    className="w-full bg-white border border-border hover:border-primary hover:text-primary text-dark font-medium py-3.5 rounded-btn flex items-center justify-center gap-2 transition-colors text-lg"
-                  >
-                    Add to Cart
-                  </button>
-                </div>
+                <button className="absolute bottom-6 right-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white px-5 py-3 text-sm font-bold uppercase tracking-[0.18em] text-dark transition-colors hover:bg-primary hover:text-white">
+                  <FiEye />
+                  Live preview
+                </button>
               </div>
 
-              {/* About the Creator Card */}
-              <div className="bg-white rounded-card shadow-sm border border-border p-8 mb-6 text-center group">
-                <div className="relative inline-block mb-6">
-                  <div className="w-20 h-20 rounded-2xl bg-primary flex items-center justify-center text-white font-bold text-4xl shadow-lg group-hover:rotate-6 transition-transform">
-                    M
-                  </div>
-                  <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-[2px]">
-                    <FiCheckCircle className="text-primary fill-white" size={24} />
-                  </div>
+              <div className="grid gap-4 border-t border-border p-5 sm:grid-cols-[0.72fr_0.28fr]">
+                <div className="grid grid-cols-4 gap-3">
+                  {images.map((image, index) => (
+                    <button
+                      key={image}
+                      onClick={() => setActiveImage(index)}
+                      className={`overflow-hidden rounded-[20px] border transition-all ${
+                        activeImage === index
+                          ? 'border-primary shadow-sm'
+                          : 'border-border opacity-75 hover:opacity-100'
+                      }`}
+                    >
+                      <div className="aspect-[4/3]">
+                        <img src={image} alt={`Preview ${index + 1}`} className="h-full w-full object-cover" />
+                      </div>
+                    </button>
+                  ))}
                 </div>
-                <h3 className="font-heading font-bold text-dark text-2xl mb-4 tracking-tight">Marketly Brand</h3>
-                <p className="text-muted text-sm leading-relaxed mb-6 italic">
-                  Pixel-perfect, high-performance web assets handcrafted with care by a dedicated full-stack developer and designer. 100% original work.
-                </p>
-                <div className="pt-6 border-t border-border flex items-center justify-center gap-6">
-                  <div className="flex flex-col items-center">
-                    <span className="font-bold text-dark text-lg">10k+</span>
-                    <span className="text-[10px] text-muted font-bold uppercase tracking-widest">Customers</span>
-                  </div>
-                  <div className="w-[1px] h-8 bg-border"></div>
-                  <div className="flex flex-col items-center">
-                    <span className="font-bold text-dark text-lg">4.9★</span>
-                    <span className="text-[10px] text-muted font-bold uppercase tracking-widest">Avg Rating</span>
-                  </div>
-                </div>
-              </div>
 
-              {/* Product Meta Table */}
-              <div className="bg-white rounded-card shadow-sm border border-border p-6 mb-6">
-                <h4 className="font-bold text-dark mb-4 text-lg">Product Details</h4>
-                <div className="flex flex-col gap-3 text-sm">
-                  <div className="flex justify-between border-b border-border pb-3">
-                    <span className="text-muted">Last Updated</span>
-                    <span className="text-dark font-bold">Mar 28, 2026</span>
-                  </div>
-                  <div className="flex justify-between border-b border-border pb-3">
-                    <span className="text-muted">Version</span>
-                    <span className="text-dark font-bold">2.1.0</span>
-                  </div>
-                  <div className="flex justify-between border-b border-border pb-3">
-                    <span className="text-muted">File Size</span>
-                    <span className="text-dark font-bold">14.5 MB</span>
-                  </div>
-                  <div className="flex justify-between border-b border-border pb-3">
-                    <span className="text-muted">Category</span>
-                    <Link to={`/browse?category=${product.category}`} className="text-primary hover:underline font-bold">{product.category}</Link>
-                  </div>
-                  <div className="pt-2">
-                    <span className="text-muted block mb-3">Tags</span>
-                    <div className="flex flex-wrap gap-2">
-                      {product.tags.map((tag, i) => (
-                        <Link key={i} to={`/browse?tag=${tag}`} className="bg-surface border border-border text-dark text-xs px-3 py-1.5 rounded-full hover:border-primary hover:text-primary transition-colors font-medium">
-                          {tag}
-                        </Link>
-                      ))}
+                <div className="rounded-[24px] border border-border bg-surface p-4">
+                  <p className="text-[10px] font-black uppercase tracking-[0.22em] text-muted">Fast summary</p>
+                  <div className="mt-4 space-y-3 text-sm text-dark">
+                    <div className="flex items-center gap-2">
+                      <FiLayers className="text-primary" />
+                      {product.tags[0]}-ready visual system
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <FiShield className="text-primary" />
+                      Clear commercial usage
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <FiDownload className="text-primary" />
+                      Instant file access
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Live Preview Button */}
-              <button className="w-full bg-white border border-primary text-primary hover:bg-primary hover:text-white font-medium py-3 rounded-btn flex items-center justify-center gap-2 transition-colors">
-                <FiExternalLink /> Live Preview
+            <div className="mt-10 rounded-[34px] border border-silver-dark/20 bg-white p-6 shadow-sm sm:p-8">
+              <Tabs tabs={tabData} />
+            </div>
+          </div>
+
+          <div className="xl:pl-4">
+            <div className="sticky top-24 space-y-6">
+              <div className="overflow-hidden rounded-[32px] border border-silver-dark/20 bg-white shadow-[0_28px_90px_-46px_rgba(15,23,42,0.28)]">
+                <div className="bg-[linear-gradient(135deg,#0f172a_0%,#1e293b_58%,#334155_100%)] px-6 py-6 text-white">
+                  <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">Purchase access</p>
+                  <div className="mt-4 flex items-baseline gap-3">
+                    <span className="font-heading text-5xl font-bold">${selectedPrice}</span>
+                    <span className="text-sm text-white/45 line-through">${Math.round(selectedPrice * 1.35)}</span>
+                  </div>
+                  <p className="mt-4 max-w-md text-sm leading-relaxed text-white/72">
+                    Choose the license that fits your use case, then add the asset to your workspace and launch fast.
+                  </p>
+                </div>
+
+                <div className="p-6">
+                  <div className="grid gap-3">
+                    {[
+                      {
+                        value: 'regular',
+                        label: 'Regular license',
+                        helper: 'Single end product / non-paid end users',
+                        price: regularPrice,
+                      },
+                      {
+                        value: 'extended',
+                        label: 'Extended license',
+                        helper: 'Paid end users / larger commercial scope',
+                        price: extendedPrice,
+                      },
+                    ].map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => setLicense(option.value)}
+                        className={`rounded-[24px] border px-5 py-4 text-left transition-colors ${
+                          license === option.value
+                            ? 'border-primary bg-primary/5'
+                            : 'border-border hover:border-primary/30 hover:bg-surface'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <div className="font-heading text-2xl font-bold text-dark">{option.label}</div>
+                            <p className="mt-1 text-sm text-muted">{option.helper}</p>
+                          </div>
+                          <span className="font-bold text-dark">${option.price}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="mt-6 rounded-[24px] border border-border bg-surface p-4">
+                    <div className="flex items-start gap-3">
+                      <FiCheckCircle className="mt-0.5 text-primary" size={18} />
+                      <p className="text-sm leading-relaxed text-muted">
+                        {license === 'regular'
+                          ? 'Use this asset in one end product where end users are not directly charged.'
+                          : 'Use this asset in one end product where end users may be charged for access.'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 grid gap-3">
+                    <button
+                      onClick={() => {
+                        addToCart(product);
+                        setIsCartOpen(true);
+                      }}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white transition-colors hover:bg-primary-dark"
+                    >
+                      <FiShoppingCart />
+                      Buy now
+                    </button>
+                    <button
+                      onClick={() => addToCart(product)}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-border bg-white px-5 py-4 text-sm font-bold uppercase tracking-[0.18em] text-dark transition-colors hover:border-primary hover:text-primary"
+                    >
+                      Add to cart
+                    </button>
+                  </div>
+
+                  <div className="mt-6 grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
+                    {[
+                      'Instant download after purchase',
+                      'Cleanly organized source files',
+                      'Commercial-friendly support window',
+                    ].map((item) => (
+                      <div key={item} className="rounded-2xl border border-border px-4 py-3 text-sm text-dark">
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-[30px] border border-silver-dark/20 bg-white p-7 text-center shadow-sm">
+                <div className="relative inline-block">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-[24px] bg-primary text-4xl font-bold text-white shadow-lg">
+                    M
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 rounded-full bg-white p-[2px]">
+                    <FiCheckCircle className="fill-white text-primary" size={22} />
+                  </div>
+                </div>
+                <p className="mt-5 text-[10px] font-black uppercase tracking-[0.22em] text-primary">Creator profile</p>
+                <h3 className="mt-3 font-heading text-3xl font-bold text-dark">{product.createdBy}</h3>
+                <p className="mt-4 text-sm leading-relaxed text-muted">
+                  Productized design assets, polished storefront systems, and UI work made to look premium from the first click.
+                </p>
+
+                <div className="mt-6 grid grid-cols-2 gap-4 border-t border-border pt-6">
+                  <div>
+                    <p className="font-heading text-2xl font-bold text-dark">10k+</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted">Customers</p>
+                  </div>
+                  <div>
+                    <p className="font-heading text-2xl font-bold text-dark">4.9/5</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted">Average rating</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-[30px] border border-silver-dark/20 bg-white p-6 shadow-sm">
+                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-primary">Product details</p>
+                <div className="mt-5 space-y-4 text-sm">
+                  {[
+                    { label: 'Last updated', value: formattedUpdateDate },
+                    { label: 'File size', value: product.fileSize },
+                    { label: 'Category', value: product.category },
+                    { label: 'Compatibility', value: product.compatibility.join(' / ') },
+                  ].map((item) => (
+                    <div key={item.label} className="flex items-start justify-between gap-4 border-b border-border pb-4 last:border-b-0 last:pb-0">
+                      <span className="text-muted">{item.label}</span>
+                      <span className="text-right font-bold text-dark">{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {product.tags.map((tag) => (
+                    <Link
+                      key={tag}
+                      to={`/browse?tag=${tag}`}
+                      className="rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-medium text-dark transition-colors hover:border-primary hover:text-primary"
+                    >
+                      {tag}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              <button className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-primary bg-white px-5 py-4 text-sm font-bold uppercase tracking-[0.18em] text-primary transition-colors hover:bg-primary hover:text-white">
+                <FiExternalLink />
+                Open live preview
               </button>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Sticky Bottom Bar */}
-      <div className={`fixed bottom-0 left-0 w-full bg-white border-t border-border shadow-[0_-4px_10px_rgba(0,0,0,0.05)] p-4 z-40 transform transition-transform duration-300 ${showStickyBar ? 'translate-y-0' : 'translate-y-full'}`}>
-        <div className="container mx-auto px-4 flex justify-between items-center h-full">
-          <div className="flex items-center gap-4">
-            <img src={images[0]} alt="thumbnail" className="w-12 h-12 rounded object-cover hidden sm:block shadow-sm" />
-            <div>
-              <h4 className="font-bold text-dark text-sm sm:text-base line-clamp-1">{product.title}</h4>
-              <div className="flex items-center gap-2 text-xs sm:text-sm mt-0.5">
-                <span className="font-bold text-primary">${license === 'regular' ? product.price : product.price * 5}</span>
-                <span className="text-muted hidden sm:inline">• {license === 'regular' ? 'Regular' : 'Extended'} License</span>
+      <div
+        className={`fixed bottom-0 left-0 z-40 w-full border-t border-border bg-white/95 p-4 shadow-[0_-6px_18px_rgba(15,23,42,0.08)] backdrop-blur transition-transform duration-300 ${
+          showStickyBar ? 'translate-y-0' : 'translate-y-full'
+        }`}
+      >
+        <div className="container mx-auto flex items-center justify-between gap-4 px-4">
+          <div className="flex min-w-0 items-center gap-4">
+            <img src={images[0]} alt={product.title} className="hidden h-14 w-14 rounded-2xl object-cover shadow-sm sm:block" />
+            <div className="min-w-0">
+              <h4 className="line-clamp-1 font-bold text-dark">{product.title}</h4>
+              <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted">
+                <span className="font-bold text-primary">${selectedPrice}</span>
+                <span>{license === 'regular' ? 'Regular license' : 'Extended license'}</span>
               </div>
             </div>
           </div>
-          <button 
-            onClick={() => { addToCart(product); setIsCartOpen(true); }}
-            className="bg-primary hover:bg-primary-dark text-white font-medium px-6 sm:px-8 py-2.5 rounded-btn flex items-center justify-center gap-2 transition-colors shadow-sm flex-shrink-0"
+
+          <button
+            onClick={() => {
+              addToCart(product);
+              setIsCartOpen(true);
+            }}
+            className="inline-flex flex-shrink-0 items-center gap-2 rounded-2xl bg-primary px-6 py-3 text-sm font-bold uppercase tracking-[0.18em] text-white transition-colors hover:bg-primary-dark"
           >
-            <FiShoppingCart /> <span className="hidden sm:inline">Buy Now</span>
+            <FiShoppingCart />
+            <span className="hidden sm:inline">Buy now</span>
           </button>
         </div>
       </div>

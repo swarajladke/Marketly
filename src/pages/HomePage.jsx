@@ -4,36 +4,19 @@ import { motion as Motion } from 'framer-motion';
 import {
   FiArrowRight,
   FiChevronDown,
-  FiCode,
   FiDownload,
-  FiImage,
-  FiLayout,
-  FiLayers,
-  FiMonitor,
-  FiPenTool,
   FiSearch,
   FiShoppingCart,
-  FiSmartphone,
   FiStar,
   FiTrendingUp,
-  FiType,
 } from 'react-icons/fi';
 import { categories, products } from '../data/mockData';
 import ProductCard from '../components/products/ProductCard';
+import iconMap from '../utils/iconMap';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const leftPanelImage =
   'https://images.pexels.com/photos/7145090/pexels-photo-7145090.jpeg?auto=compress&cs=tinysrgb&w=1200&h=1600&dpr=2';
-
-const iconMap = {
-  FiLayout: <FiLayout />,
-  FiCode: <FiCode />,
-  FiLayers: <FiLayers />,
-  FiSmartphone: <FiSmartphone />,
-  FiType: <FiType />,
-  FiImage: <FiImage />,
-  FiPenTool: <FiPenTool />,
-  FiMonitor: <FiMonitor />,
-};
 
 const stepCards = [
   {
@@ -57,6 +40,7 @@ const stepCards = [
 ];
 
 const HomePage = () => {
+  useDocumentTitle('Premium Digital Assets Marketplace');
   const [activeCategory, setActiveCategory] = useState('All');
 
   const filteredProducts =

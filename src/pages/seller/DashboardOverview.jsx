@@ -3,6 +3,7 @@ import { FiDollarSign, FiShoppingBag, FiEye, FiBox, FiTrendingUp } from 'react-i
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { revenueData, orders } from '../../data/mockData';
 import DashboardLayout from '../../components/layout/DashboardLayout';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 
 const StatCard = ({ title, value, icon, trend, isPositive }) => (
   <div className="bg-white p-6 rounded-card shadow-sm border border-border">
@@ -23,6 +24,7 @@ const StatCard = ({ title, value, icon, trend, isPositive }) => (
 );
 
 const DashboardOverview = () => {
+  useDocumentTitle('Dashboard Overview');
   return (
     <DashboardLayout>
       <div className="mb-8">

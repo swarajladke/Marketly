@@ -16,13 +16,15 @@ const ProductCard = ({ product, index = 0, viewMode = 'grid' }) => {
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.5, delay: index * 0.08, ease: 'easeOut' }}
       whileHover={isListView ? { y: -4 } : { y: -12, scale: 1.02 }}
-      className={`group overflow-hidden rounded-card border border-silver-dark/30 bg-white transition-all duration-300 hover:border-primary/40 hover:shadow-card-hover ${
+      className={`group relative overflow-hidden rounded-[26px] border border-silver-dark/30 bg-white transition-all duration-300 hover:border-primary/40 hover:shadow-card-hover ${
         isListView ? 'flex flex-col md:flex-row' : 'flex h-full flex-col'
       }`}
     >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(130,181,64,0.08),_transparent_32%),radial-gradient(circle_at_bottom_left,_rgba(116,185,255,0.08),_transparent_28%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+
       <Link
         to={`/product/${product.id}`}
-        className={`relative block overflow-hidden bg-surface ${isListView ? 'md:w-[40%]' : 'aspect-video'}`}
+        className={`relative block overflow-hidden bg-surface ${isListView ? 'md:w-[40%]' : 'aspect-[16/10]'}`}
       >
         <img
           src={product.previewImage}
@@ -40,6 +42,10 @@ const ProductCard = ({ product, index = 0, viewMode = 'grid' }) => {
             </Badge>
           </div>
         )}
+
+        <div className="absolute right-4 top-4 z-10 rounded-full border border-white/20 bg-black/30 px-3 py-1 text-[10px] font-black uppercase tracking-[0.22em] text-white backdrop-blur">
+          {product.compatibility[0]}
+        </div>
 
         <div className="absolute inset-x-0 bottom-0 flex translate-y-full items-center justify-center p-6 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0">
           <Motion.div
@@ -66,11 +72,13 @@ const ProductCard = ({ product, index = 0, viewMode = 'grid' }) => {
 
           <div className="flex items-start justify-between gap-3">
             <Link to={`/product/${product.id}`} className="transition-colors duration-300 hover:text-primary">
-              <h3 className={`font-heading font-bold leading-tight text-dark ${isListView ? 'line-clamp-2 text-2xl' : 'line-clamp-2'}`}>
+              <h3 className={`font-heading font-bold leading-tight text-dark ${isListView ? 'line-clamp-2 text-2xl' : 'line-clamp-2 text-[1.55rem]'}`}>
                 {product.title}
               </h3>
             </Link>
-            <span className="whitespace-nowrap text-lg font-bold text-dark">${product.price}</span>
+            <span className="whitespace-nowrap rounded-full bg-dark px-3 py-1.5 text-base font-bold text-white shadow-sm">
+              ${product.price}
+            </span>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
@@ -99,17 +107,19 @@ const ProductCard = ({ product, index = 0, viewMode = 'grid' }) => {
           ))}
         </div>
 
-        <div className={`mt-auto border-t border-border/50 pt-5 ${isListView ? 'flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between' : 'flex items-center justify-between'}`}>
-          <div className={`flex ${isListView ? 'flex-wrap gap-x-5 gap-y-2' : 'items-center gap-3'} text-xs text-muted`}>
+        <div className={`mt-auto rounded-[22px] border border-border/70 bg-slate-50/80 px-4 py-4 ${isListView ? 'flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between' : 'flex items-center justify-between gap-3'}`}>
+          <div className={`flex ${isListView ? 'flex-wrap gap-x-5 gap-y-2' : 'flex-col gap-2'} text-xs text-muted`}>
             <span className="font-bold uppercase tracking-[0.18em] text-dark/80">
               {product.createdBy}
             </span>
-            <span className="flex items-center gap-1">
-              <FiClock className="text-primary" />
-              Updated {new Date(product.lastUpdated).toLocaleDateString()}
-            </span>
-            <span>{product.fileSize}</span>
-            {isListView && <span>{product.compatibility.join(' / ')}</span>}
+            <div className={`flex ${isListView ? 'flex-wrap gap-x-5 gap-y-2' : 'flex-wrap gap-2'}`}>
+              <span className="flex items-center gap-1">
+                <FiClock className="text-primary" />
+                Updated {new Date(product.lastUpdated).toLocaleDateString()}
+              </span>
+              <span>{product.fileSize}</span>
+              {isListView && <span>{product.compatibility.join(' / ')}</span>}
+            </div>
           </div>
 
           <Motion.button

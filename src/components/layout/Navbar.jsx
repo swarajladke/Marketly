@@ -1,19 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FiSearch, FiMenu, FiX, FiChevronDown, FiLayout, FiCode, FiLayers, FiSmartphone, FiType, FiImage, FiPenTool, FiMonitor, FiShoppingCart } from 'react-icons/fi';
+import { FiSearch, FiMenu, FiX, FiChevronDown, FiShoppingCart } from 'react-icons/fi';
 import { categories } from '../../data/mockData';
 import { useCart } from '../../context/CartContext';
-
-const iconMap = {
-  FiLayout: <FiLayout />,
-  FiCode: <FiCode />,
-  FiLayers: <FiLayers />,
-  FiSmartphone: <FiSmartphone />,
-  FiType: <FiType />,
-  FiImage: <FiImage />,
-  FiPenTool: <FiPenTool />,
-  FiMonitor: <FiMonitor />
-};
+import iconMap from '../../utils/iconMap';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

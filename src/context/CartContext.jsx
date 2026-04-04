@@ -9,8 +9,14 @@ export const useCart = () => useContext(CartContext);
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(() => {
     // Attempt to load cart from local storage if available
-    const savedCart = localStorage.getItem('marketly_cart');
-    return savedCart ? JSON.parse(savedCart) : [];
+    try {
+      const savedCart = localStorage.getItem('marketly_cart');
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch {
+      // If localStorage data is corrupted, start fresh
+      localStorage.removeItem('marketly_cart');
+      return [];
+    }
   });
   
   const [isCartOpen, setIsCartOpen] = useState(false);
