@@ -14,6 +14,7 @@ import { categories, products } from '../data/mockData';
 import ProductCard from '../components/products/ProductCard';
 import iconMap from '../utils/iconMap';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import ParallaxGallery from '../components/common/ParallaxGallery';
 
 const leftPanelImage =
   'https://images.pexels.com/photos/7145090/pexels-photo-7145090.jpeg?auto=compress&cs=tinysrgb&w=1200&h=1600&dpr=2';
@@ -254,6 +255,10 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
+      {/* Parallax scroll gallery */}
+      <ParallaxGallery />
+
 
       <section className="sticky top-0 z-40 border-b border-silver-dark/20 bg-white/80 shadow-sm backdrop-blur-xl lg:top-16">
         <div className="container mx-auto">
