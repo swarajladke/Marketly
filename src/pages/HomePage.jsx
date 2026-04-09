@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion as Motion } from 'framer-motion';
 import {
   FiArrowRight,
@@ -15,6 +15,7 @@ import ProductCard from '../components/products/ProductCard';
 import iconMap from '../utils/iconMap';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 import ParallaxGallery from '../components/common/ParallaxGallery';
+import DownloadImageButton from '../components/common/DownloadImageButton';
 
 const leftPanelImage =
   'https://images.pexels.com/photos/7145090/pexels-photo-7145090.jpeg?auto=compress&cs=tinysrgb&w=1200&h=1600&dpr=2';
@@ -42,7 +43,8 @@ const stepCards = [
 
 const HomePage = () => {
   useDocumentTitle('Premium Digital Assets Marketplace');
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeCategory] = useState('All');
+  const navigate = useNavigate();
 
   const filteredProducts =
     activeCategory === 'All'
@@ -179,36 +181,18 @@ const HomePage = () => {
                     alt={heroProduct.title}
                     className="h-[500px] w-full object-cover object-center"
                   />
+                  <DownloadImageButton
+                    imageUrl={heroProduct.previewImage}
+                    filename={heroProduct.title}
+                    className="absolute right-6 top-6 z-10"
+                  />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.04),rgba(15,23,42,0.72))]"></div>
 
                   <div className="gallery-chip absolute left-6 top-6 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[11px] font-black uppercase tracking-[0.26em] text-white backdrop-blur">
                     Featured collection
                   </div>
 
-                  <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-                    <div className="gallery-chip max-w-lg rounded-[26px] p-5 text-white backdrop-blur-md">
-                      <p className="text-[11px] font-black uppercase tracking-[0.26em] text-white/65">
-                        {heroProduct.category}
-                      </p>
-                      <h2 className="mt-3 font-heading text-3xl font-bold leading-tight">
-                        {heroProduct.title}
-                      </h2>
-                      <p className="mt-3 max-w-md text-sm leading-relaxed text-white/72">
-                        {heroProduct.description}
-                      </p>
-
-                      <div className="mt-5 flex flex-wrap gap-2">
-                        {heroProduct.tags.slice(0, 3).map((tag) => (
-                          <span
-                            key={tag}
-                            className="gallery-chip rounded-full px-3 py-1 text-[11px] font-medium text-white/78"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
 
@@ -267,7 +251,7 @@ const HomePage = () => {
             {stripCategories.map((category) => (
               <button
                 key={category.id || category.name}
-                onClick={() => setActiveCategory(category.name)}
+                onClick={() => navigate(`/browse?category=${category.name}`)}
                 className={`flex-shrink-0 flex items-center gap-2 rounded-full border px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all ${
                   activeCategory === category.name
                     ? 'border-primary bg-brand-gradient text-white shadow-neon'
@@ -311,6 +295,12 @@ const HomePage = () => {
                     src={heroProduct.previewImage}
                     alt={heroProduct.title}
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <DownloadImageButton
+                    imageUrl={heroProduct.previewImage}
+                    filename={`${heroProduct.title}-featured`}
+                    className="absolute right-5 top-5 z-10 opacity-0 group-hover:opacity-100"
+                    iconOnly={true}
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.06),rgba(15,23,42,0.72))]"></div>
                   <div className="gallery-chip absolute left-5 top-5 rounded-full px-4 py-2 text-[11px] font-black uppercase tracking-[0.24em] text-white">
@@ -376,6 +366,12 @@ const HomePage = () => {
                         src={product.previewImage}
                         alt={product.title}
                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <DownloadImageButton
+                        imageUrl={product.previewImage}
+                        filename={product.title}
+                        className="absolute bottom-3 right-3 z-10 h-9 w-9 px-0 opacity-0 group-hover:opacity-100"
+                        iconOnly={true}
                       />
                     </div>
                     <div className="p-5">
@@ -475,6 +471,11 @@ const HomePage = () => {
                 src={leftPanelImage}
                 alt="Modern skyscrapers in urban city downtown at twilight"
                 className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+              />
+              <DownloadImageButton
+                imageUrl={leftPanelImage}
+                filename="marketly-visual-anchor"
+                className="absolute right-6 top-6 z-10 opacity-0 group-hover:opacity-100"
               />
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.04),rgba(15,23,42,0.35)_42%,rgba(15,23,42,0.88))]"></div>
               <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/35 to-transparent"></div>

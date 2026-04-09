@@ -40,13 +40,19 @@ const FilterSidebar = ({
   toggleCompatibility,
   clearFilters,
   resultCount,
+  themeVariant = 'default',
 }) => {
   const selectedPrice = priceRanges.find((range) => range.value === filters.priceRange)?.label || 'Any price';
+  const isDashboardTheme = themeVariant === 'dashboard';
 
   const sidebarContent = (
-    <div className="flex h-full flex-col overflow-hidden rounded-[28px] border border-primary/15 bg-[linear-gradient(180deg,rgba(255,95,218,0.1),rgba(4,4,5,0.98)_24%,rgba(0,0,0,0.99))] shadow-neon">
+    <div className={`flex h-full flex-col overflow-hidden rounded-[28px] border ${
+      isDashboardTheme
+        ? 'border-white/8 bg-[linear-gradient(180deg,rgba(8,9,12,0.98),rgba(3,4,5,0.99)_24%,rgba(0,0,0,0.995))] shadow-[0_30px_80px_-56px_rgba(0,0,0,0.96)]'
+        : 'border-primary/15 bg-[linear-gradient(180deg,rgba(255,95,218,0.1),rgba(4,4,5,0.98)_24%,rgba(0,0,0,0.99))] shadow-neon'
+    }`}>
       <div className="relative overflow-hidden border-b border-white/10 px-5 py-5">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,79,216,0.24),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(255,43,214,0.14),_transparent_28%)]" />
+        <div className={`absolute inset-0 ${isDashboardTheme ? 'bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.08),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(255,43,214,0.08),_transparent_28%)]' : 'bg-[radial-gradient(circle_at_top_left,_rgba(255,79,216,0.24),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(255,43,214,0.14),_transparent_28%)]'}`} />
         <div className="relative flex items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 text-white">
@@ -69,8 +75,14 @@ const FilterSidebar = ({
       </div>
 
       <div className="flex h-full flex-col overflow-y-auto p-5 scrollbar-hide">
-        <div className="overflow-hidden rounded-[24px] border border-primary/20 bg-[linear-gradient(135deg,rgba(255,95,218,0.2),rgba(48,12,38,0.94)_34%,rgba(18,8,16,0.96)_72%,rgba(255,43,214,0.1)_100%)] p-5 text-white shadow-neon">
-          <div className="rounded-full border border-white/12 bg-white/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.28em] text-primary">
+        <div className={`overflow-hidden rounded-[24px] border p-5 text-white ${
+          isDashboardTheme
+            ? 'border-white/8 bg-[linear-gradient(135deg,rgba(6,7,11,0.98),rgba(12,13,18,0.96)_34%,rgba(3,4,5,0.985)_72%,rgba(8,11,18,0.94)_100%)] shadow-[0_24px_60px_-44px_rgba(0,0,0,0.94)]'
+            : 'border-primary/20 bg-[linear-gradient(135deg,rgba(255,95,218,0.2),rgba(48,12,38,0.94)_34%,rgba(18,8,16,0.96)_72%,rgba(255,43,214,0.1)_100%)] shadow-neon'
+        }`}>
+          <div className={`rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-[0.28em] ${
+            isDashboardTheme ? 'border-white/8 bg-white/6 text-white/70' : 'border-white/12 bg-white/10 text-primary'
+          }`}>
             Filter mood
           </div>
           <p className="mt-4 font-heading text-[28px] font-bold leading-tight">
@@ -80,11 +92,11 @@ const FilterSidebar = ({
             Refine by compatibility, budget, and license to narrow the catalog quickly.
           </p>
           <div className="mt-5 grid grid-cols-2 gap-3">
-            <div className="rounded-2xl border border-white/12 bg-white/10 p-3">
+            <div className={`rounded-2xl border p-3 ${isDashboardTheme ? 'border-white/8 bg-white/5' : 'border-white/12 bg-white/10'}`}>
               <p className="text-[10px] font-black uppercase tracking-[0.24em] text-white/55">Budget lane</p>
               <p className="mt-2 text-sm font-semibold text-white">{selectedPrice}</p>
             </div>
-            <div className="rounded-2xl border border-white/12 bg-white/10 p-3">
+            <div className={`rounded-2xl border p-3 ${isDashboardTheme ? 'border-white/8 bg-white/5' : 'border-white/12 bg-white/10'}`}>
               <p className="text-[10px] font-black uppercase tracking-[0.24em] text-white/55">License</p>
               <p className="mt-2 text-sm font-semibold capitalize text-white">
                 {filters.license === 'all' ? 'Any license' : filters.license}
@@ -93,15 +105,23 @@ const FilterSidebar = ({
           </div>
         </div>
 
-        <div className="mt-5 rounded-[24px] border border-primary/12 bg-[linear-gradient(180deg,rgba(10,8,12,0.98),rgba(8,8,10,0.98))] px-4 py-2 backdrop-blur">
+        <div className={`mt-5 rounded-[24px] border px-4 py-2 backdrop-blur ${
+          isDashboardTheme
+            ? 'border-white/8 bg-[linear-gradient(180deg,rgba(5,6,8,0.985),rgba(2,3,4,0.99))]'
+            : 'border-primary/12 bg-[linear-gradient(180deg,rgba(10,8,12,0.98),rgba(8,8,10,0.98))]'
+        }`}>
           <FilterSection title="Category" defaultOpen={true}>
             <div className="flex max-h-60 flex-col gap-3 overflow-y-auto pr-1 scrollbar-hide">
               <button
                 onClick={() => toggleCategory('All')}
                 className={`flex items-center justify-between rounded-2xl border px-4 py-3 text-left transition-all ${
                   filters.category === 'All'
-                    ? 'border-primary/40 bg-[linear-gradient(135deg,rgba(255,95,218,0.18),rgba(255,43,214,0.1)_100%)] text-white shadow-sm'
-                    : 'border-white/10 text-white/60 hover:border-primary/40 hover:text-white'
+                      ? isDashboardTheme
+                        ? 'border-white/12 bg-[linear-gradient(135deg,rgba(10,12,17,0.98),rgba(4,5,7,0.995)_100%)] text-white shadow-sm'
+                        : 'border-primary/40 bg-[linear-gradient(135deg,rgba(255,95,218,0.18),rgba(255,43,214,0.1)_100%)] text-white shadow-sm'
+                      : isDashboardTheme
+                        ? 'border-white/10 text-white/60 hover:border-white/16 hover:text-white'
+                        : 'border-white/10 text-white/60 hover:border-primary/40 hover:text-white'
                 }`}
               >
                 <span className="font-medium">All categories</span>
@@ -114,8 +134,12 @@ const FilterSidebar = ({
                   onClick={() => toggleCategory(category.name)}
                   className={`flex items-center justify-between rounded-2xl border px-4 py-3 text-left transition-all ${
                     filters.category === category.name
-                      ? 'border-primary/40 bg-[linear-gradient(135deg,rgba(255,95,218,0.18),rgba(255,43,214,0.1)_100%)] text-white shadow-sm'
-                      : 'border-white/10 text-white/60 hover:border-primary/40 hover:text-white'
+                      ? isDashboardTheme
+                        ? 'border-white/12 bg-[linear-gradient(135deg,rgba(10,12,17,0.98),rgba(4,5,7,0.995)_100%)] text-white shadow-sm'
+                        : 'border-primary/40 bg-[linear-gradient(135deg,rgba(255,95,218,0.18),rgba(255,43,214,0.1)_100%)] text-white shadow-sm'
+                      : isDashboardTheme
+                        ? 'border-white/10 text-white/60 hover:border-white/16 hover:text-white'
+                        : 'border-white/10 text-white/60 hover:border-primary/40 hover:text-white'
                   }`}
                 >
                   <span className="font-medium">{category.name}</span>
@@ -135,8 +159,12 @@ const FilterSidebar = ({
                   onClick={() => setPriceRange(range.value)}
                   className={`rounded-2xl border px-4 py-3 text-left text-sm font-medium transition-all ${
                     filters.priceRange === range.value
-                      ? 'border-primary/40 bg-[linear-gradient(135deg,rgba(255,95,218,0.18),rgba(255,43,214,0.1)_100%)] text-white shadow-sm'
-                      : 'border-white/10 text-white/60 hover:border-primary/40 hover:text-white'
+                      ? isDashboardTheme
+                        ? 'border-white/12 bg-[linear-gradient(135deg,rgba(10,12,17,0.98),rgba(4,5,7,0.995)_100%)] text-white shadow-sm'
+                        : 'border-primary/40 bg-[linear-gradient(135deg,rgba(255,95,218,0.18),rgba(255,43,214,0.1)_100%)] text-white shadow-sm'
+                      : isDashboardTheme
+                        ? 'border-white/10 text-white/60 hover:border-white/16 hover:text-white'
+                        : 'border-white/10 text-white/60 hover:border-primary/40 hover:text-white'
                   }`}
                 >
                   {range.label}
@@ -153,8 +181,12 @@ const FilterSidebar = ({
                   onClick={() => setRating(filters.rating === rating ? null : rating)}
                   className={`flex items-center gap-3 rounded-2xl border p-3 text-left transition-all ${
                     filters.rating === rating
-                      ? 'border-primary/40 bg-[linear-gradient(135deg,rgba(255,95,218,0.18),rgba(255,43,214,0.1)_100%)] shadow-sm'
-                      : 'border-white/10 hover:border-primary/40 hover:bg-white/6'
+                      ? isDashboardTheme
+                        ? 'border-white/12 bg-[linear-gradient(135deg,rgba(10,12,17,0.98),rgba(4,5,7,0.995)_100%)] shadow-sm'
+                        : 'border-primary/40 bg-[linear-gradient(135deg,rgba(255,95,218,0.18),rgba(255,43,214,0.1)_100%)] shadow-sm'
+                      : isDashboardTheme
+                        ? 'border-white/10 hover:border-white/16 hover:bg-white/6'
+                        : 'border-white/10 hover:border-primary/40 hover:bg-white/6'
                   }`}
                 >
                   <div className="flex text-yellow-400">
@@ -180,8 +212,12 @@ const FilterSidebar = ({
                   onClick={() => setLicense(option.value)}
                   className={`rounded-2xl border px-4 py-3 text-sm font-medium transition-all ${
                     filters.license === option.value
-                      ? 'border-primary/40 bg-[linear-gradient(135deg,rgba(255,95,218,0.18),rgba(255,43,214,0.1)_100%)] text-white shadow-sm'
-                      : 'border-white/10 text-white/60 hover:border-primary/40 hover:text-white'
+                      ? isDashboardTheme
+                        ? 'border-white/12 bg-[linear-gradient(135deg,rgba(10,12,17,0.98),rgba(4,5,7,0.995)_100%)] text-white shadow-sm'
+                        : 'border-primary/40 bg-[linear-gradient(135deg,rgba(255,95,218,0.18),rgba(255,43,214,0.1)_100%)] text-white shadow-sm'
+                      : isDashboardTheme
+                        ? 'border-white/10 text-white/60 hover:border-white/16 hover:text-white'
+                        : 'border-white/10 text-white/60 hover:border-primary/40 hover:text-white'
                   }`}
                 >
                   {option.label}
@@ -201,8 +237,12 @@ const FilterSidebar = ({
                     onClick={() => toggleCompatibility(software)}
                     className={`rounded-full border px-4 py-2 text-sm font-medium transition-all ${
                       isActive
-                        ? 'border-primary/30 bg-primary text-white shadow-lg shadow-primary/20'
-                        : 'border-white/10 bg-white/5 text-white/60 hover:border-primary/40 hover:text-white'
+                        ? isDashboardTheme
+                          ? 'border-white/12 bg-[linear-gradient(135deg,rgba(10,12,17,0.98),rgba(4,5,7,0.995)_100%)] text-white shadow-lg shadow-black/40'
+                          : 'border-primary/30 bg-primary text-white shadow-lg shadow-primary/20'
+                        : isDashboardTheme
+                          ? 'border-white/10 bg-white/5 text-white/60 hover:border-white/16 hover:text-white'
+                          : 'border-white/10 bg-white/5 text-white/60 hover:border-primary/40 hover:text-white'
                     }`}
                   >
                     {software}
@@ -213,7 +253,11 @@ const FilterSidebar = ({
           </FilterSection>
         </div>
 
-        <div className="mt-5 rounded-[24px] border border-secondary/15 bg-[linear-gradient(135deg,rgba(168,85,247,0.16),rgba(14,11,24,0.96)_60%,rgba(255,43,214,0.08)_100%)] p-5 shadow-neon">
+        <div className={`mt-5 rounded-[24px] border p-5 ${
+          isDashboardTheme
+            ? 'border-white/8 bg-[linear-gradient(135deg,rgba(7,8,11,0.98),rgba(12,13,18,0.96)_60%,rgba(5,6,8,0.99)_100%)] shadow-[0_24px_60px_-44px_rgba(0,0,0,0.94)]'
+            : 'border-secondary/15 bg-[linear-gradient(135deg,rgba(168,85,247,0.16),rgba(14,11,24,0.96)_60%,rgba(255,43,214,0.08)_100%)] shadow-neon'
+        }`}>
           <p className="text-[11px] font-black uppercase tracking-[0.26em] text-primary">
             Studio note
           </p>
@@ -224,11 +268,11 @@ const FilterSidebar = ({
             This catalog is curated like a private design library, so the left rail should feel more like guidance than empty chrome.
           </p>
           <div className="mt-4 grid grid-cols-2 gap-3">
-            <div className="rounded-2xl border border-white/12 bg-white/8 p-3">
+            <div className={`rounded-2xl border p-3 ${isDashboardTheme ? 'border-white/8 bg-white/5' : 'border-white/12 bg-white/8'}`}>
               <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/52">Focus</p>
               <p className="mt-2 text-sm font-semibold text-white">Fewer, stronger assets</p>
             </div>
-            <div className="rounded-2xl border border-white/12 bg-white/8 p-3">
+            <div className={`rounded-2xl border p-3 ${isDashboardTheme ? 'border-white/8 bg-white/5' : 'border-white/12 bg-white/8'}`}>
               <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/52">Tone</p>
               <p className="mt-2 text-sm font-semibold text-white">Curated, not crowded</p>
             </div>

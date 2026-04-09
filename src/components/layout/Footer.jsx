@@ -14,7 +14,7 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="relative overflow-hidden border-t border-primary/12 bg-[linear-gradient(180deg,#020203,#000000)] pt-16 pb-8">
+    <footer className="relative overflow-hidden border-t border-white/10 bg-[linear-gradient(180deg,#020203,#000000)] pt-16 pb-8 theme-neon">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,95,218,0.14),_transparent_28%),radial-gradient(circle_at_70%_20%,_rgba(217,70,239,0.08),_transparent_22%),radial-gradient(circle_at_bottom_right,_rgba(255,43,214,0.06),_transparent_24%)]" />
 
       <div className="container relative mx-auto px-4">

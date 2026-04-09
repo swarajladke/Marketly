@@ -16,6 +16,7 @@ import { products, reviews } from '../data/mockData';
 import Tabs from '../components/common/Tabs';
 import ReviewCard from '../components/products/ReviewCard';
 import Badge from '../components/common/Badge';
+import DownloadImageButton from '../components/common/DownloadImageButton';
 import { useCart } from '../context/CartContext';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 
@@ -189,6 +190,11 @@ const ProductDetailPage = () => {
                   src={images[1]}
                   alt={`${product.title} alternate preview`}
                   className="h-full w-full object-cover"
+                />
+                <DownloadImageButton
+                  imageUrl={images[1]}
+                  filename={`${product.title}-alternate-preview`}
+                  className="absolute right-5 top-5 z-10"
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.08),rgba(15,23,42,0.68))]"></div>
                 <div className="absolute inset-x-0 bottom-0 p-6 text-white">
@@ -402,6 +408,11 @@ const ProductDetailPage = () => {
                   src={images[activeImage]}
                   alt={product.title}
                   className="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.02]"
+                />
+                <DownloadImageButton
+                  imageUrl={images[activeImage]}
+                  filename={`${product.title}-preview-${activeImage + 1}`}
+                  className="absolute right-6 top-6 z-10"
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.02),rgba(15,23,42,0.62))]"></div>
                 <div className="absolute left-6 top-6 flex flex-wrap gap-2">

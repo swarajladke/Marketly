@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion as Motion, useScroll, useTransform } from 'framer-motion';
+import DownloadImageButton from './DownloadImageButton';
 
 const galleryImages = [
   // ── Row 1: Top zone ──
@@ -100,7 +101,7 @@ const galleryImages = [
     rounded: 'rounded-[28px]',
   },
   {
-    src: 'https://images.unsplash.com/photo-1604076913837-52ab5f7c1ac4?w=800&q=80',
+    src: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800&q=80',
     alt: 'Geometric paper art',
     startX: '-140%', endX: '120%',
     startY: '-70%', endY: '170%',
@@ -110,7 +111,7 @@ const galleryImages = [
     rounded: 'rounded-[22px]',
   },
   {
-    src: 'https://images.unsplash.com/photo-1567095761054-7a02e69e5b2b?w=800&q=80',
+    src: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&q=80',
     alt: 'Iridescent soap bubble',
     startX: '50%', endX: '-70%',
     startY: '-130%', endY: '120%',
@@ -177,13 +178,19 @@ function ParallaxImage({ image, scrollYProgress }) {
       style={{ x, y, rotate, scale, opacity }}
     >
       <div
-        className={`${image.width} overflow-hidden ${image.rounded} shadow-[0_20px_70px_-20px_rgba(0,0,0,0.55),0_20px_70px_-28px_rgba(255,95,218,0.24)] ring-1 ring-white/20 transition-shadow duration-500 hover:shadow-[0_30px_90px_-20px_rgba(0,0,0,0.65),0_28px_90px_-30px_rgba(255,43,214,0.2)] hover:ring-white/40`}
+        className={`group relative ${image.width} overflow-hidden ${image.rounded} shadow-[0_20px_70px_-20px_rgba(0,0,0,0.55),0_20px_70px_-28px_rgba(255,95,218,0.24)] ring-1 ring-white/20 transition-shadow duration-500 hover:shadow-[0_30px_90px_-20px_rgba(0,0,0,0.65),0_28px_90px_-30px_rgba(255,43,214,0.2)] hover:ring-white/40`}
       >
         <img
           src={image.src}
           alt={image.alt}
           loading="lazy"
           className="aspect-[4/3] h-full w-full object-cover transition-transform duration-700 ease-out hover:scale-110"
+        />
+        <DownloadImageButton
+          imageUrl={image.src}
+          filename={image.alt}
+          iconOnly={true}
+          className="absolute bottom-3 right-3 z-10 h-9 w-9 px-0 opacity-0 group-hover:opacity-100"
         />
       </div>
     </Motion.div>

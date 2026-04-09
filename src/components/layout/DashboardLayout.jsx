@@ -1,163 +1,134 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { FiHome, FiBox, FiUploadCloud, FiDollarSign, FiSettings, FiBell, FiMenu, FiX, FiSearch, FiTrendingUp, FiStar, FiMessageSquare, FiPercent, FiLogOut, FiHelpCircle } from 'react-icons/fi';
+import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  FiBell,
+  FiBox,
+  FiDollarSign,
+  FiHome,
+  FiMenu,
+  FiMessageSquare,
+  FiPercent,
+  FiSearch,
+  FiSettings,
+  FiStar,
+  FiTrendingUp,
+  FiUploadCloud,
+  FiX,
+  FiCommand,
+  FiMusic,
+  FiImage,
+  FiChevronDown,
+} from 'react-icons/fi';
+import DashboardFloatingBar from './DashboardFloatingBar';
 
 const DashboardLayout = ({ children }) => {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const location = useLocation();
 
-  const menuSections = [
-    {
-      title: 'Main Menu',
-      links: [
-        { name: 'Overview', path: '/admin', icon: <FiHome /> },
-        { name: 'Analytics', path: '/admin/analytics', icon: <FiTrendingUp /> },
-        { name: 'Earnings', path: '/admin/earnings', icon: <FiDollarSign /> },
-      ]
-    },
-    {
-      title: 'Inventory',
-      links: [
-        { name: 'Manage Products', path: '/admin/products', icon: <FiBox /> },
-        { name: 'Upload asset', path: '/admin/upload', icon: <FiUploadCloud /> },
-      ]
-    },
-    {
-      title: 'Community',
-      links: [
-        { name: 'Reviews', path: '/admin/reviews', icon: <FiStar />, badge: 4 },
-        { name: 'Messages', path: '/admin/messages', icon: <FiMessageSquare />, badge: 2 },
-        { name: 'Promotions', path: '/admin/promotions', icon: <FiPercent /> },
-      ]
-    },
-    {
-      title: 'System',
-      links: [
-        { name: 'Store Settings', path: '/admin/settings', icon: <FiSettings /> },
-      ]
-    }
+  const navLinks = useMemo(
+    () => [
+      { name: 'Gen AI', path: '#' },
+      { name: 'Video Templates', path: '#' },
+      { name: 'Stock Video', path: '#' },
+      { name: 'Audio', path: '#' },
+      { name: 'More', path: '#' },
+    ],
+    [],
+  );
+
+  const rightActions = [
+    { name: 'License', path: '#' },
+    { name: 'Enterprise', path: '#' },
+    { name: 'Pricing', path: '#' },
   ];
 
   return (
-    <div className="theme-neon flex min-h-screen bg-[#000000] font-body text-dark">
-      {/* Mobile Sidebar Overlay */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm lg:hidden" 
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+    <div className="min-h-screen bg-[#000000] font-body text-white">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-[#000000] pt-4">
+        <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between px-4 pb-4 sm:px-6 xl:px-8">
+          <div className="flex items-center gap-8">
+            <Link to="/" className="flex items-center gap-2">
+              <span className="flex h-8 w-8 items-center justify-center rounded bg-envato p-1">
+                <svg viewBox="0 0 24 24" className="h-6 w-6 text-black fill-current">
+                   <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 18l-8-4V8l8 4 8-4v8l-8 4z" />
+                </svg>
+              </span>
+              <span className="font-heading text-2xl font-bold tracking-tight text-white">envato</span>
+            </Link>
 
-      {/* Sidebar */}
-      <div className={`gallery-panel fixed left-0 top-0 z-50 flex h-screen w-64 transform flex-col border-r border-primary/10 transition-transform duration-300 ease-in-out lg:sticky ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-        <div className="flex items-center justify-between border-b border-white/10 p-6">
-          <Link to="/" className="font-heading font-bold text-2xl text-primary">Marketly.</Link>
-          <button className="text-muted hover:text-white lg:hidden" onClick={() => setSidebarOpen(false)}>
-            <FiX size={24} />
-          </button>
+            <nav className="hidden items-center gap-6 xl:flex">
+              {navLinks.map((link) => (
+                <button
+                  key={link.name}
+                  className="group flex items-center gap-1 text-sm font-medium text-white/70 hover:text-white"
+                >
+                  {link.name}
+                  <FiChevronDown size={14} className="opacity-40 transition-transform group-hover:rotate-180" />
+                </button>
+              ))}
+            </nav>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="hidden items-center gap-6 xl:flex mr-4">
+              {rightActions.map((action) => (
+                <button key={action.name} className="text-sm font-medium text-white/70 hover:text-white">
+                  {action.name}
+                </button>
+              ))}
+            </div>
+            
+            <button className="hidden rounded-md bg-envato px-6 py-2.5 text-sm font-bold text-black transition-opacity hover:opacity-90 md:block">
+              Get unlimited downloads
+            </button>
+            
+            <button className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white hover:bg-white/10">
+              <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
+                <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z" />
+              </svg>
+            </button>
+
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#d7dde6] text-xs font-bold text-black border-2 border-white/10">
+              SL
+            </div>
+          </div>
+        </div>
+
+        <div className="mx-auto mt-2 w-full max-w-[1440px] px-4 sm:px-6 xl:px-8 pb-4">
+          <div className="flex h-16 w-full items-center overflow-hidden rounded-full border border-white/10 bg-[#121417] px-2 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)]">
+            <button className="flex items-center gap-2 rounded-full px-6 py-2 text-sm font-bold text-white/90 transition-colors hover:bg-white/5">
+              All Items
+              <FiChevronDown size={14} className="opacity-50" />
+            </button>
+            <div className="h-8 w-px bg-white/10" />
+            <div className="flex flex-1 items-center px-4">
+               <FiSearch className="text-white/30" size={20} />
+               <input
+                 type="search"
+                 placeholder="Search themes, templates and more..."
+                 className="flex-1 border-none bg-transparent px-4 text-base font-bold text-white placeholder:text-white/20 focus:ring-0"
+               />
+            </div>
+            <div className="flex items-center gap-2 pr-2">
+               <button className="hidden rounded-full bg-envato px-6 py-2.5 text-sm font-black text-black transition-transform hover:scale-105 sm:block">
+                 Search
+               </button>
+            </div>
+          </div>
         </div>
         
-        <div className="flex-1 overflow-y-auto px-4 py-6 scrollbar-hide">
-          <nav className="flex flex-col gap-8">
-            {menuSections.map((section) => (
-              <div key={section.title}>
-                <p className="mb-4 px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-white/35">{section.title}</p>
-                <div className="flex flex-col gap-1.5">
-                  {section.links.map((link) => (
-                    <Link 
-                      key={link.name} 
-                      to={link.path}
-                      className={`group flex items-center justify-between px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
-                        location.pathname === link.path 
-                          ? 'bg-primary text-white shadow-lg shadow-primary/20' 
-                          : 'text-white/58 hover:bg-white/5 hover:text-primary'
-                      }`}
-                      onClick={() => setSidebarOpen(false)}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className={`text-xl ${location.pathname === link.path ? 'text-white' : 'text-white/45 group-hover:text-primary'}`}>
-                          {link.icon}
-                        </span>
-                        <span className="text-sm">{link.name}</span>
-                      </div>
-                      {link.badge && (
-                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
-                          location.pathname === link.path ? 'bg-white/20 text-white' : 'bg-primary/10 text-primary'
-                        }`}>
-                          {link.badge}
-                        </span>
-                      )}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </nav>
-
-          {/* Help Center Card */}
-          <div className="mt-10 mb-6 px-2">
-            <div className="gallery-chip group relative overflow-hidden rounded-2xl border border-white/10 p-5 transition-colors hover:border-primary/20">
-              <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full bg-primary/10 blur-2xl transition-colors group-hover:bg-primary/20" />
-              <div className="relative z-10">
-                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-gradient text-white shadow-sm">
-                  <FiHelpCircle size={20} />
-                </div>
-                <h4 className="mb-1 text-sm font-bold text-white">Help Center</h4>
-                <p className="mb-4 text-xs leading-relaxed text-white/55">Need help with your store settings? Our support is 24/7.</p>
-                <button className="gallery-chip w-full rounded-lg border border-white/10 py-2 text-xs font-bold text-white transition-all hover:border-primary hover:text-primary">
-                  Get Support
-                </button>
-              </div>
-            </div>
-          </div>
+        {/* Progress indicator mockup line */}
+        <div className="relative h-1 w-full bg-white/5">
+           <div className="absolute left-[62%] h-full w-4 bg-envato rounded-full blur-sm shadow-[0_0_10px_rgba(177,255,74,0.8)]" />
         </div>
-
-        <div className="mt-auto border-t border-white/10 p-4">
-          <div className="flex cursor-pointer items-center justify-between gap-3 rounded-xl p-2 transition-colors hover:bg-white/5 group">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-xl bg-primary flex-shrink-0 flex items-center justify-center text-white font-bold text-lg shadow-sm">
-                M
-              </div>
-              <div className="min-w-0">
-                <p className="truncate text-sm font-bold text-white">Marketly Admin</p>
-                <p className="text-[10px] text-primary font-bold uppercase tracking-wider">Store Owner</p>
-              </div>
-            </div>
-            <button className="p-2 text-white/45 transition-colors hover:text-red-400" title="Logout">
-              <FiLogOut size={18} />
-            </button>
-          </div>
-        </div>
-      </div>
+      </header>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Topbar */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-[linear-gradient(135deg,rgba(12,9,14,0.96),rgba(20,10,19,0.96)_52%,rgba(10,8,12,0.98)_100%)] px-4 sm:px-8">
-          <div className="flex items-center gap-4">
-            <button className="p-1 text-white lg:hidden" onClick={() => setSidebarOpen(true)}>
-              <FiMenu size={24} />
-            </button>
-            <div className="gallery-chip hidden w-64 items-center rounded-btn border border-white/10 px-3 py-2 transition-colors focus-within:border-primary sm:flex">
-              <FiSearch className="mr-2 text-white/45" />
-              <input type="text" placeholder="Search..." className="bg-transparent focus:outline-none text-sm w-full" />
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <button className="relative p-2 text-white/55 transition-colors hover:text-white">
-              <FiBell size={20} />
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full border-2 border-black bg-red-500"></span>
-            </button>
-            <Link to="/" className="hidden sm:block text-sm font-medium text-primary hover:underline">Back to Marketplace</Link>
-          </div>
-        </header>
+      <main className="relative mx-auto min-h-[calc(100vh-140px)] w-full max-w-[1440px] py-10 px-4 sm:px-6 xl:px-8">
+        {children}
+      </main>
 
-        {/* Page Content */}
-        <main className="flex-1 overflow-y-auto bg-[linear-gradient(180deg,#000000,#020203)] p-4 sm:p-8">
-          {children}
-        </main>
-      </div>
+      {/* Floating Bar */}
+      <DashboardFloatingBar />
     </div>
   );
 };

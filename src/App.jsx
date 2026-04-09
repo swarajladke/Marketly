@@ -34,6 +34,7 @@ function App() {
   const hideLayoutConfig = ['/login', '/register', '/admin']
   const hideLayout = hideLayoutConfig.some(path => location.pathname.startsWith(path))
   const useCosmicTheme = true
+  const showLandingSmoke = location.pathname === '/'
 
   return (
     <CartProvider>
@@ -41,21 +42,36 @@ function App() {
       <div className={`min-h-screen flex flex-col font-body ${useCosmicTheme ? 'theme-neon' : 'text-dark'}`}>
         {!hideLayout && <Navbar />}
         <main className={`flex-1 z-0 relative ${useCosmicTheme ? 'bg-[#000000]' : 'bg-surface'}`}>
-          {useCosmicTheme && (
-            <div className="pointer-events-none fixed inset-0 z-[2] flex items-center justify-center" aria-hidden="true">
-        <div
-          className="h-[min(96vh,1120px)] w-[min(62vw,820px)]"
-          style={{
-            backgroundImage: `url(${smokeBackground})`,
-            backgroundPosition: 'center center',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'contain',
-                  opacity: 0.26,
-            filter: 'blur(9px) saturate(1.08)',
-                  transform: 'translateY(2%)',
-                  mixBlendMode: 'screen',
-                  maskImage: 'radial-gradient(circle at center, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.78) 44%, rgba(0,0,0,0.24) 72%, rgba(0,0,0,0) 100%)',
-                  WebkitMaskImage: 'radial-gradient(circle at center, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.78) 44%, rgba(0,0,0,0.24) 72%, rgba(0,0,0,0) 100%)',
+          {useCosmicTheme && showLandingSmoke && (
+            <div className="pointer-events-none fixed inset-0 z-[2] overflow-hidden" aria-hidden="true">
+              <div className="smoke-layer smoke-layer-a absolute inset-0 flex items-end justify-center">
+                <div
+                  className="smoke-plume smoke-plume-a h-[min(112vh,1260px)] w-[min(70vw,940px)]"
+                  style={{
+                    backgroundImage: `url(${smokeBackground})`,
+                  }}
+                />
+              </div>
+              <div className="smoke-layer smoke-layer-b absolute inset-0 flex items-end justify-center">
+                <div
+                  className="smoke-plume smoke-plume-b h-[min(106vh,1180px)] w-[min(58vw,740px)]"
+                  style={{
+                    backgroundImage: `url(${smokeBackground})`,
+                  }}
+                />
+              </div>
+              <div className="smoke-layer smoke-layer-c absolute inset-0 flex items-end justify-center">
+                <div
+                  className="smoke-plume smoke-plume-c h-[min(100vh,1080px)] w-[min(48vw,620px)]"
+                  style={{
+                    backgroundImage: `url(${smokeBackground})`,
+                  }}
+                />
+              </div>
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: 'radial-gradient(circle at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.12) 54%, rgba(0, 0, 0, 0.34) 100%)',
                 }}
               />
             </div>
